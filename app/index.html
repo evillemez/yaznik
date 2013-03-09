@@ -1,0 +1,97 @@
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<head>
+    <title>Yaznik!</title>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+<!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+    <link rel="stylesheet" href="styles/bootstrap.css">
+    <link rel="stylesheet" href="styles/main.css">
+    <style>
+      body {
+        padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+		background-color: #fff;
+      }
+      .cell-pad {
+          padding: 10px;
+      }
+      .step-num {
+          font-style: bolder;
+          font-size: 24px;
+      }
+      .step-explanation {
+          font-style: italic;
+          font-size: 16px;
+      }
+    </style>
+</head>
+<body>
+
+    <div class="navbar navbar-fixed-top navbar-inverse">
+        <div class="navbar-inner">
+                <div class="container">
+                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </a>
+                    <a class="brand" href="">Yaznik</a>
+                    <div class="nav-collapse">
+                        <ul class="nav">
+                            <li><a href="">Home</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+      
+        <div id='content' class='container'>
+            <div class="row">
+                <div class='span2 offset2'>
+                    <div class='cell-pad'>
+                        <p class='step-num brand'>1.</p>
+                    </div>
+                </div>
+                <div class='span8'>
+                    <div class='cell-pad'>
+                        <p class='step-explanation lead'>Drag the image below into your toolbar.</p>
+                        <p>
+                            <a href="javascript:(function(){if(typeof%20window.__z==='undefined'){window.__z='f';var%20s=document.createElement('script');s.setAttribute('src','http://localhost/yaznik/app/scripts/bootstrap.js?z='+new%20Date().getTime());document.getElementsByTagName('body')[0].appendChild(s);}})();" alt="Yaznik Bookmarklet!!">
+                                <img src='images/install.jpg' alt="Yaznik">
+                            </a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class='span2 offset2'>
+                    <div class='cell-pad'>
+                        <span class='step-num'>2.</span>
+                    </div>
+                </div>
+                <div class='span8'>
+                    <div class='cell-pad'>
+                        <p class='step-explanation lead'>Browse the internet as usual.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class='span2 offset2'>
+                    <div class='cell-pad'>
+                        <span class='step-num'>3.</span>
+                    </div>
+                </div>
+                <div class='span8'>
+                    <div class='cell-pad'>
+                        <p class='step-explanation lead'>Found something interesting?  Click on your bookmark.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
