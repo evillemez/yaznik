@@ -10,7 +10,7 @@ Yaznik.config = {
     widgets: {
         'yazToolbar': 'http://localhost/yaznik/app/widgets/toolbar/index.html'
 //        ,'yazGlosser': 'http://localhost/yaznik/app/widgets/glosser/index.html',
-//        ,'yazAuth': 'http://localhost/yaznik/app/widgets/auth/index.html'
+        ,'yazAuth': 'http://localhost/yaznik/app/widgets/auth/index.html'
     }
 };
 
@@ -23,7 +23,7 @@ Yaznik.Loader = function(config) {
 Yaznik.Loader.prototype.onWindowMessage = function(event) {
     //validate event, if it's ours
     if (event.origin !== 'http://localhost') {
-        //return;
+        return;
     }
     
     var name = event.data.event;
@@ -32,6 +32,9 @@ Yaznik.Loader.prototype.onWindowMessage = function(event) {
     switch (name) {
         case 'yaznik.widget.init' : this.handleWidgetInit(event.data); break;
         case 'yaznik.widget.styles' : this.handleWidgetStyle(event.data); break;
+        case 'yaznik.widget.load' : this.onWidgetLoad(event); break;
+        case 'yaznik.widget.unload' : this.onWidgetUnload(event); break;
+        case 'yaznik.unload' : this.unload(); break;
         default : this.relayEventToWidgets(event); break;
     }
 };
@@ -51,18 +54,28 @@ Yaznik.Loader.prototype.init = function() {
 Yaznik.Loader.prototype.handleWidgetInit = function(data) {
 };
 
+Yaznik.Loader.prototype.onWidgetLoad = function(event) {
+    this.loadWidget(event.data.data.widget);
+};
+
+Yaznik.Loader.prototype.onWidgetUnload = function(event) {
+    this.unloadWidget(event.data.data.widget);
+};
+
 Yaznik.Loader.prototype.handleWidgetStyle = function(data) {
     var iframe = this.loadedWidgets[data.from];
     var styles = data.data.styles;
-    console.log(data);
     for (var key in styles) {
-        console.log("Setting " + styles[key]);
         iframe.style[key] = styles[key];
     }
 };
 
 Yaznik.Loader.prototype.relayEventToWidgets = function(event) {
-    // body...
+    for (var key in this.loadedWidgets) {
+        if (key !== event.data.from) {
+            this.loadedWidgets[key].contentWindow.postMessage(event.data, 'http://localhost:80/');
+        }
+    }
 };
 
 Yaznik.Loader.prototype.loadWidget = function(name) {
@@ -71,31 +84,36 @@ Yaznik.Loader.prototype.loadWidget = function(name) {
         widget.id = name;
         widget.className = 'yaznik-widget';
         widget.frameBorder = 0;
+        widget.setAttribute('allowtransparency', 'true');
         widget.onload = function() {
             widget.contentWindow.postMessage({event: 'yaznik.dispatcher.init'}, 'http://localhost:80/');
         };
         widget.src = this.config.widgets[name];
         document.getElementsByTagName('body')[0].appendChild(widget);
+        widget.setAttribute('allowtransparency', 'true');
 
         this.loadedWidgets[name] = widget;
     }
 };
 
-Yaznik.Loader.prototype.broadcast = function(eventName) {
-    // body...
+Yaznik.Loader.prototype.unloadWidget = function(name) {
+    var body = document.getElementsByTagName('body')[0];
+    body.removeChild(this.loadedWidgets[name]);
 };
 
 
+Yaznik.Loader.prototype.broadcast = function(eventName, data) {
+    // body...
+};
+
 Yaznik.Loader.prototype.unload = function() {
-    this.broadcast('yaznik.exit');
-    var body = document.getElementsByTagName('body')[0];
-    for (var widget in document.getElementsByClassName('yaznik-widget')) {
-        body.removeChild(widget);
+    for (var id in this.loadedWidgets) {
+        this.unloadWidget(id);
     }
-    
     
     Yaznik.INITIALIZED = false;
     Yaznik.yaz = null;
+    delete window.__z;
 };
 
 //initialize and run the damn thing

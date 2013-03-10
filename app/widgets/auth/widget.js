@@ -4,41 +4,34 @@ var source = 'http://localhost:80/';
 
 //styles to set for the iframe containing this widget
 var iFrameStyles = {
-    bottom: '0px',
+    top: '0px',
     left: '0px',
     width: '100%',
-    height: '60px',
+    height: '100%',
     position: 'fixed',
-    zIndex: '9999999'
+    zIndex: '9999998',
+    backgroundColor: 'transparent'
 };
 
-angular.module('YaznikToolbarWidget', [])
+/* Some raw jquery for intro animation */
+$(document).ready(function() {
+    $('body').hide().fadeIn('fast');
+});
+
+/* Angular module for this app */
+angular.module('YaznikAuthWidget', [])
     .value('iFrameStyles', iFrameStyles)
 	.factory('dispatcher', function() {
-        var dispatcher = new Dispatcher(window, 'yazToolbar');
+        var dispatcher = new Dispatcher(window, 'yazAuth');
         return dispatcher;
 	})
-	.controller('ToolbarController', function($scope, dispatcher) {
-	    $scope.user = {
-	        name: 'Anonymous',
-            authenticated: false
-	    };
+	.controller('AuthController', function($scope, dispatcher) {
         
-        $scope.login = function() {
-            dispatcher.loadWidget('yazAuth');
+        $scope.cancel = function() {
+            dispatcher.dispatch('yaznik.user', {name: "Anonymous"});
+            dispatcher.unloadWidget('yazAuth');
         };
         
-        $scope.exit = function() {
-            dispatcher.dispatch('yaznik.unload');
-        };
-        
-        /* use cross-window dispatcher to be aware of changes */
-        
-        dispatcher.on('yaznik.user', function(user) {
-            $scope.$apply(function() {
-                $scope.user = user;
-            });
-        });
 	})
     .run(function(dispatcher, iFrameStyles) {
 
@@ -47,6 +40,10 @@ angular.module('YaznikToolbarWidget', [])
             dispatcher.dispatch('yaznik.widget.styles', {
                 styles: iFrameStyles
             });
+        });
+        
+        dispatcher.on('yaznik.dispatcher.init', function() {
+            dispatcher.dispatch('yaznik.user', {name: 'Evan'});
         });
         
         /* listen for things from other widgets */

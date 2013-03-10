@@ -15,7 +15,7 @@ function Dispatcher(window, widgetId) {
 Dispatcher.prototype.handleWindowEvent = function(event, dispatcher) {
     switch (event.data.event) {
         case 'yaznik.dispatcher.init' : this.onInitialize(event); break;
-        case 'yaznik.dispatcher.config.set' : this.onConfigSet(event); break;
+        case 'yaznik.config.set' : this.onConfigSet(event); break;
         default : this.handleWidgetEvent(event); break;
     }
 };
@@ -33,7 +33,7 @@ Dispatcher.prototype.handleWidgetEvent = function(event) {
     if (this.listeners[eventName]) {
         for (var index in this.listeners[eventName]) {
             var cb = this.listeners[eventName][index];
-            cb(event.data);
+            cb(event.data.data, event);
         }
     }
 };
@@ -52,6 +52,14 @@ Dispatcher.prototype.dispatch = function(eventName, data) {
         
         this.targetWindow.postMessage(eventData, this.targetOrigin);
     }
+};
+
+Dispatcher.prototype.loadWidget = function(name) {
+    this.dispatch('yaznik.widget.load', {widget: name});
+};
+
+Dispatcher.prototype.unloadWidget = function(name) {
+    this.dispatch('yaznik.widget.unload', {widget: name});
 };
 
 Dispatcher.prototype.on = function(eventName, callback) {

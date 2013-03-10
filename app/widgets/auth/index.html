@@ -1,0 +1,59 @@
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> 
+<html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <script type='text/javascript' src='../../components/jquery/jquery.min.js'></script>
+        <script type='text/javascript' src='../../components/angular/angular.js'></script>
+        <script type='text/javascript' src='../../scripts/dispatcher.js'></script>
+        <script type='text/javascript' src='widget.js'></script>
+
+        <link rel="stylesheet" href="../../components/bootstrap.css/css/bootstrap.css" />
+        <style>
+            body {
+                background-color: transparent;
+            }
+            #background {
+                background-color: #000;
+                height: 100%;
+                min-height: 100%;
+                width: 100%;
+                min-width: 100%;
+                position: absolute;
+                opacity: 0.6;
+                z-index: 0;
+            }
+            #auth {
+                z-index: 1;
+                border: 2px solid #222;
+                margin-top: 100px;
+                background-color: #eee;
+                position: relative;
+            }
+            .pad {
+                padding: 10px;
+            }
+        </style>
+    </head>
+    <body ng-app='YaznikAuthWidget' ng-controller='AuthController'>
+        <div id='background'></div>
+        <div class='container'>
+            <div id='auth' class='span8 offset2'>
+                <div class='pad'>
+                    <div class='row'>
+                        <div class='span4'>
+                            Login or 
+                        </div>
+                        <div class='span3'>
+                            <button class='btn btn-info' ng-click='cancel()'>cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
