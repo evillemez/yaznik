@@ -12,17 +12,22 @@ var iFrameStyles = {
     zIndex: '9999999'
 };
 
-angular.module('YaznikToolbarWidget', [])
+var anonUser = {
+    name: 'Anonymous',
+    authenticated: false
+};
+
+angular.module('YaznikToolbarWidget', ['ngCookies'])
     .value('iFrameStyles', iFrameStyles)
 	.factory('dispatcher', function() {
         var dispatcher = new Dispatcher(window, 'yazToolbar');
         return dispatcher;
 	})
-	.controller('ToolbarController', function($scope, dispatcher) {
-	    $scope.user = {
-	        name: 'Anonymous',
-            authenticated: false
-	    };
+    .factory('user', function($cookieStore) {
+	    return $cookieStore.get('user') || anonUser;
+    })
+	.controller('ToolbarController', function($scope, user, dispatcher) {
+	    $scope.user = user;
         
         $scope.login = function() {
             dispatcher.loadWidget('yazAuth');

@@ -13,25 +13,54 @@ var iFrameStyles = {
     backgroundColor: 'transparent'
 };
 
+var anonUser = {
+    name: 'Anonymous',
+    authenticated: false
+};
+
 /* Some raw jquery for intro animation */
 $(document).ready(function() {
-    $('body').hide().fadeIn('fast');
+    $('body').fadeIn('fast');
 });
 
 /* Angular module for this app */
-angular.module('YaznikAuthWidget', [])
+angular.module('YaznikAuthWidget', ['ngCookies'])
     .value('iFrameStyles', iFrameStyles)
+    .value('anonUser', anonUser)
 	.factory('dispatcher', function() {
         var dispatcher = new Dispatcher(window, 'yazAuth');
         return dispatcher;
 	})
-	.controller('AuthController', function($scope, dispatcher) {
+    .factory('user', function($cookieStore) {
+	    return $cookieStore.get('user') || anonUser;
+	})
+	.controller('AuthController', function($scope, $cookieStore, user, anonUser, dispatcher) {
+                
+        $scope.user = user;
         
-        $scope.cancel = function() {
-            dispatcher.dispatch('yaznik.user', {name: "Anonymous"});
+        $scope.signin = function() {
+            $scope.user.authenticated = true;
+            
+            $cookieStore.put('user', $scope.user);
+            dispatcher.set('yaznik.user', $scope.user);
+            dispatcher.dispatch('yaznik.user', $scope.user);
+
             dispatcher.unloadWidget('yazAuth');
         };
         
+        $scope.signout = function() {
+            $scope.user = anonUser;
+            
+            $cookieStore.put('user', $scope.user);
+            dispatcher.set('yaznik.user', $scope.user);
+            dispatcher.dispatch('yaznik.user', $scope.user);
+
+            dispatcher.unloadWidget('yazAuth');
+        };
+        
+        $scope.cancel = function() {
+            dispatcher.unloadWidget('yazAuth');
+        };
 	})
     .run(function(dispatcher, iFrameStyles) {
 
@@ -40,10 +69,6 @@ angular.module('YaznikAuthWidget', [])
             dispatcher.dispatch('yaznik.widget.styles', {
                 styles: iFrameStyles
             });
-        });
-        
-        dispatcher.on('yaznik.dispatcher.init', function() {
-            dispatcher.dispatch('yaznik.user', {name: 'Evan'});
         });
         
         /* listen for things from other widgets */
