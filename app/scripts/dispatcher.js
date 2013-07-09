@@ -7,7 +7,6 @@ function Dispatcher(window, widgetId) {
     this.targetOrigin = null;
     this.listeners = {};
     
-    //no, I don't understand why I have to do this.  Javascript: wtf, seriously?!
     var dispatcher = this;
     this.window.addEventListener('message', function(event) { dispatcher.handleWindowEvent(event); }, false);
 }
